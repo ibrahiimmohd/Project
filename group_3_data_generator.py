@@ -1,3 +1,5 @@
+#Lab8
+
 import matplotlib.pyplot as plt
 import random
 
@@ -22,24 +24,3 @@ y = [test.generator_4((x % 50) > 24) for x in range(number_of_values)]
 plt.plot(y, 'g')
 
 plt.show()
-
-
-
-"""
-    value = {'base':10, 'delta': 0.15}
-
-def generator_4(increment = True) -> float:
-    if increment:
-        value['base'] += random.random() #value['delta']
-    else:
-        value['base'] -= random.random() #value['delta']
-    return value['base']
-    
-number_of_values = random.randint(0,200) #200
-    
-y = [generator_4((x % 50) > 24) for x in range(number_of_values)]
-    
-plt.plot(y, 'g')
-    
-plt.show()
-"""
