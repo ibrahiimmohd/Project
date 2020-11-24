@@ -1,3 +1,5 @@
+#Lab8&9
+
 from tkinter import Tk, Canvas, Frame, BOTH, W
 import tkinter as tk
 
