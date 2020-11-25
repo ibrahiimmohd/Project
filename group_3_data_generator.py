@@ -20,6 +20,8 @@ number_of_values = 500 #random.randint(0,500)
 
 test = Simulator(0) #Simulator(10, 0.15)    
 y = [test.generator_4((x % 50) > 24) for x in range(number_of_values)]
+#y = [20 if x == 250 else test.generator_4((x % 50) > 24) for x in range(number_of_values)]
+
 
 plt.plot(y, 'g')
 
