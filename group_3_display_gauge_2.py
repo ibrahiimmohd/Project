@@ -50,6 +50,10 @@ class Example(Frame):
         canvas.create_text(252.5, 80, anchor=W, font='Purisa', text='.5')
         canvas.create_text(292.5, 80, anchor=W, font='Purisa', text='1.5')
 
+        canvas.create_text(170, 80, anchor=W, font='Purisa', text='LOW')
+        canvas.create_text(350, 80, anchor=W, font='Purisa', text='HIGH')
+        canvas.create_text(250, 30, anchor=W, font='Purisa', text='NORMAL')
+
         var = canvas.create_line(self.recHeight, 90, 275, 130)
 
         canvas.pack(fill=BOTH, expand=1) 
