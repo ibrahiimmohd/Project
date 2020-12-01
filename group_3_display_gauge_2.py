@@ -12,13 +12,16 @@ class Example(Frame):
     
 
     def initUI(self):
-        self.master.title('Lab 9 and 10 A & B')
+        self.master.title('Lab 9/10 Temperature')
         self.pack(fill=BOTH, expand=1)
 
         canvas = Canvas(self)   
 
         canvas.create_text(25, 200, anchor=W, font='Purisa', 
         text='Enter Value: ')
+
+        canvas.create_text(55, 50, anchor=W, font='Purisa', 
+        text='Unit in °C')
         
         entry1 = tk.Entry()
         canvas.create_window(75, 220, window=entry1)  
