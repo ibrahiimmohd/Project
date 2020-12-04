@@ -12,12 +12,6 @@ class Example(Frame):
     entryValue = "0"
     recHeight = 300
     randomList = []
-    d1 = 0
-    d2 = 0
-    d3 = 0
-    d4 = 0
-    d5 = 0
-    d6 = 0
 
     def __init__(self):
         super().__init__()
