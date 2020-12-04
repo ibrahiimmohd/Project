@@ -3,15 +3,17 @@
 from tkinter import Tk, Canvas, Frame, BOTH, W
 import tkinter as tk
 import random
-from tkinter.ttk import Button
-from tkinter import Tk, Canvas, Frame, BOTH, W, TOP, BOTTOM
-import time
-import threading
 
 class Example(Frame):
     entryValue = "0"
     recHeight = 300
-    randomList = []
+    rangeTag = ""
+    line1 = ""
+    line2 = ""
+    line3 = ""
+    line4 = ""
+    line5 = ""
+
     d1 = 0
     d2 = 0
     d3 = 0
@@ -23,56 +25,92 @@ class Example(Frame):
         super().__init__()
         self.initUI()
         self.update()
-                
+        
+        randomList = []
+        for x in range(20):
+            randomList.append(int(random.randint(80,200)))
+        for j in range(len(randomList)):
+            if(randomList[j] in range(0,100)):
+                self.d1+=1
+            elif(randomList[j] in range(101,120)):
+                self.d2+=1
+            elif(randomList[j] in range(121,140)):
+                self.d3+=1
+            elif(randomList[j] in range(141,160)):
+                self.d4+=1
+            elif(randomList[j] in range(161,180)):
+                self.d5+=1
+            elif(randomList[j] in range(181,200)):
+                self.d6+=1
 
     def initUI(self):
-        self.master.title('Lab 12')
+        self.master.title('Lab 11 Temperature')
         self.pack(fill=BOTH, expand=1)
 
         canvas = Canvas(self)
 
-        button = Button(root, text= 'Go')
-        button.pack(side= TOP, pady = 5)  
-        for x in range(20):
-            self.randomList.append(int(random.randint(80,200)))
+        canvas.create_text(25, 20, anchor=W, font='Purisa', 
+        text='Data range: ')
 
-        def goButton():
-            t = threading.Thread(target=changeValue())
-            t.setDaemon(True)
-
-        def changeValue(): 
-
-            for x in range(0, 20):
-                self.randomList.pop(0)
-                self.randomList.append(int(random.randint(80,200)))
-                
-                cal1 = self.recHeight - self.randomList[0]
-                cal2 = self.recHeight - self.randomList[1]
-                cal3 = self.recHeight - self.randomList[2]
-                cal4 = self.recHeight - self.randomList[3]
-                cal5 = self.recHeight - self.randomList[4]
-                cal6 = self.recHeight - self.randomList[5]
-
-                print(cal1, cal2, cal3, cal4, cal5, cal6)
-
-                canvas.coords(line1, 225, cal2 , 175, cal1)
-                canvas.coords(line2, 275, cal3, 225, cal2)
-                canvas.coords(line3, 325, cal4 , 275, cal3)
-                canvas.coords(line4, 375, cal5 , 325, cal4)
-                canvas.coords(line5, 425, cal6 , 375, cal5)
-                time.sleep(0.5)
-                print('Loop number: {}'.format(x))
-
-                canvas.coords(var1, 150, 300, 200, cal1 )
-                canvas.coords(var2, 200, 300, 250, cal2 )
-                canvas.coords(var3, 250, 300, 300, cal3 )
-                canvas.coords(var4, 300, 300, 350, cal4 )
-                canvas.coords(var5, 350, 300, 400, cal5 )
-                canvas.coords(var6, 400, 300, 450, cal6 )   
-                root.update()            
+        canvas.create_text(45, 60, anchor=W, font='Purisa', 
+        text='Data range: ')
         
+        entry1 = tk.Entry()
+        canvas.create_window(220, 20, window=entry1)  
+        self.entryValue = entry1.get()
 
-        button1 = tk.Button(text='Go', width=10,command= lambda : goButton())
+        def changeValue(text): 
+            
+            high = int(text)
+            low = high - 5
+            rangeTxt = str('0' if low < 0 else low)+'-'+str(high)
+
+            cal1 = (self.recHeight)-(int(self.d1) * 50)
+            cal2 = (self.recHeight)-(int(self.d2) * 50)
+            cal3 = (self.recHeight)-(int(self.d3) * 50)
+            cal4 = (self.recHeight)-(int(self.d4) * 50)
+            cal5 = (self.recHeight)-(int(self.d5) * 50)
+            cal6 = (self.recHeight)-(int(self.d6) * 50)
+
+            check1 = cal1 if self.d1 in range(low,high) else self.recHeight
+            check2 = cal2 if self.d2 in range(low,high) else self.recHeight
+            check3 = cal3 if self.d3 in range(low,high) else self.recHeight
+            check4 = cal4 if self.d4 in range(low,high) else self.recHeight
+            check5 = cal5 if self.d5 in range(low,high) else self.recHeight
+            check6 = cal6 if self.d6 in range(low,high) else self.recHeight
+
+            if(self.rangeTag == ''):
+                self.rangeTag = canvas.create_text(155, 60, anchor=W, font='Purisa', text = rangeTxt, tag="rangeTag")
+                self.line1 = canvas.create_line(225, check2, 175, check1)
+                self.line2 = canvas.create_line(275, check3, 225, check2)
+                self.line3 = canvas.create_line(325, check4, 275, check3)
+                self.line4 = canvas.create_line(375, check5, 325, check4)
+                self.line5 = canvas.create_line(425, check6, 375, check5)
+            else:
+                canvas.delete(self.rangeTag)
+                canvas.delete(self.line1)
+                canvas.delete(self.line2)
+                canvas.delete(self.line3)
+                canvas.delete(self.line4)
+                canvas.delete(self.line5)
+
+                self.rangeTag = canvas.create_text(155, 60, anchor=W, font='Purisa', text = rangeTxt, tag="rangeTag")
+                self.line1 = canvas.create_line(225, check2, 175, check1)
+                self.line2 = canvas.create_line(275, check3, 225, check2)
+                self.line3 = canvas.create_line(325, check4, 275, check3)
+                self.line4 = canvas.create_line(375, check5, 325, check4)
+                self.line5 = canvas.create_line(425, check6, 375, check5)
+
+
+            canvas.coords(var1, 150, 300, 200, check1)
+            canvas.coords(var2, 200, 300, 250, check2)
+            canvas.coords(var3, 250, 300, 300, check3)
+            canvas.coords(var4, 300, 300, 350, check4)
+            canvas.coords(var5, 350, 300, 400, check5)
+            canvas.coords(var6, 400, 300, 450, check6)
+ 
+        button1 = tk.Button(text='Go', width=10,
+        command= lambda : changeValue(entry1.get()))
         canvas.create_window(340, 20, window=button1)
 
         var1 = canvas.create_rectangle(150, 300, 200, self.recHeight,
@@ -93,22 +131,12 @@ class Example(Frame):
         var6 = canvas.create_rectangle(400, 300, 450, self.recHeight,
         outline='#222', fill='#f76')
 
-        line1 = canvas.create_line(225, 0 , 175, 0)
-        line2 = canvas.create_line(275, 0, 225, 0)
-        line3 = canvas.create_line(325, 0 , 275, 0)
-        line4 = canvas.create_line(375, 0 , 325, 0)
-        line5 = canvas.create_line(425, 0 , 375, 0)
-
         canvas.create_line(150, 80, 150, 300)
-        
 
         canvas.pack(fill=BOTH, expand=1) 
-        
-        
-   
+
         
 root = tk.Tk()
 ex = Example()
 root.geometry('600x450+300+300')
 root.mainloop()
-
