@@ -31,8 +31,6 @@ class Example(Frame):
 
         canvas = Canvas(self)
 
-        # button = Button(root, text= 'Go')
-        # button.pack(side= TOP, pady = 5)  
         for x in range(20):
             self.randomList.append(int(random.randint(80,200)))
 
