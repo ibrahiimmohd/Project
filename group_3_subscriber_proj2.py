@@ -1,9 +1,7 @@
 #group_3_subscriber_proj2.py
-from tkinter import Tk, Canvas, Frame, BOTH, W
+from tkinter import Tk, Canvas, Frame, BOTH, W, TOP, BOTTOM
 import tkinter as tk
 import random
-from tkinter.ttk import Button
-from tkinter import Tk, Canvas, Frame, BOTH, W, TOP, BOTTOM
 import time
 import threading
 import paho.mqtt.client as mqtt
@@ -21,23 +19,17 @@ class Example(Frame):
     X_AXIS = 150
     RECT_COLOR = '#28A745'
     RECT_OUTLINE_COLOR = '#222'
-    rec1 = None
-    rec2 = None
-    rec3 = None
-    rec4 = None
-    rec5 = None
-    rec6 = None
-    rec7 = None
+    rect_list = list()
     time_stamp = None
-    rect_height = {
-        "rect1": Y_AXIS,
-        "rect2": Y_AXIS,
-        "rect3": Y_AXIS,
-        "rect4": Y_AXIS,
-        "rect5": Y_AXIS,
-        "rect6": Y_AXIS,
-        "rect7": Y_AXIS,
-    }
+    rect_height = [
+        Y_AXIS,
+        Y_AXIS,
+        Y_AXIS,
+        Y_AXIS,
+        Y_AXIS,
+        Y_AXIS,
+        Y_AXIS,
+    ]
 
     def __init__(self):
         super().__init__()
@@ -54,37 +46,27 @@ class Example(Frame):
         # create coordinate x-axis
         self.canvas.create_line(self.X_AXIS, self.Y_AXIS, 500, self.Y_AXIS)
 
-        self.time_stamp = self.canvas.create_text(self.X_AXIS+150,self.Y_AXIS+20,fill="darkblue",font="Times 12 italic bold",
-                        text="")
+        self.time_stamp = self.canvas.create_text(self.X_AXIS+150,self.Y_AXIS+20,fill="#FFB6C1",font="Times 12 italic bold")
 
         #initialize 7 rectangle with empty height
-        self.rec1 = self.canvas.create_rectangle(self.X_AXIS + 0*self.RECT_WIDTH, self.Y_AXIS, self.X_AXIS + 1*self.RECT_WIDTH, self.Y_AXIS, outline=self.RECT_OUTLINE_COLOR, fill=self.RECT_COLOR)
-        self.rec2 = self.canvas.create_rectangle(self.X_AXIS + 1*self.RECT_WIDTH, self.Y_AXIS, self.X_AXIS + 2*self.RECT_WIDTH, self.Y_AXIS, outline=self.RECT_OUTLINE_COLOR, fill=self.RECT_COLOR)
-        self.rec3 = self.canvas.create_rectangle(self.X_AXIS + 2*self.RECT_WIDTH, self.Y_AXIS, self.X_AXIS + 3*self.RECT_WIDTH, self.Y_AXIS, outline=self.RECT_OUTLINE_COLOR, fill=self.RECT_COLOR)
-        self.rec4 = self.canvas.create_rectangle(self.X_AXIS + 3*self.RECT_WIDTH, self.Y_AXIS, self.X_AXIS + 4*self.RECT_WIDTH, self.Y_AXIS, outline=self.RECT_OUTLINE_COLOR, fill=self.RECT_COLOR)
-        self.rec5 = self.canvas.create_rectangle(self.X_AXIS + 4*self.RECT_WIDTH, self.Y_AXIS, self.X_AXIS + 5*self.RECT_WIDTH, self.Y_AXIS, outline=self.RECT_OUTLINE_COLOR, fill=self.RECT_COLOR)
-        self.rec6 = self.canvas.create_rectangle(self.X_AXIS + 5*self.RECT_WIDTH, self.Y_AXIS, self.X_AXIS + 6*self.RECT_WIDTH, self.Y_AXIS, outline=self.RECT_OUTLINE_COLOR, fill=self.RECT_COLOR)
-        self.rec7 = self.canvas.create_rectangle(self.X_AXIS + 6*self.RECT_WIDTH, self.Y_AXIS, self.X_AXIS + 7*self.RECT_WIDTH, self.Y_AXIS, outline=self.RECT_OUTLINE_COLOR, fill=self.RECT_COLOR)
+        for x in range(7):
+            rec = self.canvas.create_rectangle(
+                self.X_AXIS + x*self.RECT_WIDTH, 
+                self.Y_AXIS, 
+                self.X_AXIS + (x+1)*self.RECT_WIDTH, 
+                self.Y_AXIS, 
+                outline=self.RECT_OUTLINE_COLOR,fill=self.RECT_COLOR)
+            self.rect_list.append(rec)
 
         self.canvas.pack(fill=BOTH, expand=1)
 
     def drawRectangle(self,canvas,height):
+        for x in range(6):
+            self.rect_height[x] = self.rect_height[x+1]
+        self.rect_height[6] = height
 
-        self.rect_height["rect1"] = self.rect_height["rect2"]
-        self.rect_height["rect2"] = self.rect_height["rect3"]
-        self.rect_height["rect3"] = self.rect_height["rect4"]
-        self.rect_height["rect4"] = self.rect_height["rect5"]
-        self.rect_height["rect5"] = self.rect_height["rect6"]
-        self.rect_height["rect6"] = self.rect_height["rect7"]
-        self.rect_height["rect7"] = height
-
-        canvas.coords(self.rec1, self.X_AXIS + 0*self.RECT_WIDTH, self.Y_AXIS, self.X_AXIS + 1*self.RECT_WIDTH,self.rect_height["rect1"])
-        canvas.coords(self.rec2, self.X_AXIS + 1*self.RECT_WIDTH, self.Y_AXIS, self.X_AXIS + 2*self.RECT_WIDTH,self.rect_height["rect2"])
-        canvas.coords(self.rec3, self.X_AXIS + 2*self.RECT_WIDTH, self.Y_AXIS, self.X_AXIS + 3*self.RECT_WIDTH,self.rect_height["rect3"])
-        canvas.coords(self.rec4, self.X_AXIS + 3*self.RECT_WIDTH, self.Y_AXIS, self.X_AXIS + 4*self.RECT_WIDTH,self.rect_height["rect4"])
-        canvas.coords(self.rec5, self.X_AXIS + 4*self.RECT_WIDTH, self.Y_AXIS, self.X_AXIS + 5*self.RECT_WIDTH,self.rect_height["rect5"])
-        canvas.coords(self.rec6, self.X_AXIS + 5*self.RECT_WIDTH, self.Y_AXIS, self.X_AXIS + 6*self.RECT_WIDTH,self.rect_height["rect6"])
-        canvas.coords(self.rec7, self.X_AXIS + 6*self.RECT_WIDTH, self.Y_AXIS, self.X_AXIS + 7*self.RECT_WIDTH,self.rect_height["rect7"])
+        for x in range(7):
+            canvas.coords(self.rect_list[x], self.X_AXIS + x*self.RECT_WIDTH, self.Y_AXIS, self.X_AXIS + (x+1)*self.RECT_WIDTH,self.rect_height[x])
 
              
 root = tk.Tk()
@@ -97,7 +79,12 @@ def on_message(client, userdata, message):
     try:
         obj = json.loads(data)
         util.print_data(obj)
+        # Because Human temp is always greater than 30*C
+        # So will only take the units column
+        # But the units column is small ~ 7
+        # So multiply by 40 to indicate better the different
         ex.drawRectangle(ex.canvas,ex.Y_AXIS - (obj['body_temp'] - 30) * 40)
+        # Update time stamp label
         ex.canvas.itemconfigure(ex.time_stamp, text="Last update: "+obj['retrieve_at'])
     except:
         ex.drawRectangle(ex.canvas,ex.Y_AXIS)
@@ -116,7 +103,5 @@ client.subscribe(SUBSCRIBE_TOPIC)
 #Start the MQTT Mosquito process loop
 client.loop_start()
 root.mainloop()
-# while True:
-#  client.loop_forever()
 
 
