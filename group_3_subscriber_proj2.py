@@ -19,6 +19,8 @@ class Example(Frame):
     canvas = None
     Y_AXIS = 400 
     X_AXIS = 150
+    RECT_COLOR = '#28A745'
+    RECT_OUTLINE_COLOR = '#222'
     rec1 = None
     rec2 = None
     rec3 = None
@@ -26,6 +28,7 @@ class Example(Frame):
     rec5 = None
     rec6 = None
     rec7 = None
+    time_stamp = None
     rect_height = {
         "rect1": Y_AXIS,
         "rect2": Y_AXIS,
@@ -51,14 +54,17 @@ class Example(Frame):
         # create coordinate x-axis
         self.canvas.create_line(self.X_AXIS, self.Y_AXIS, 500, self.Y_AXIS)
 
+        self.time_stamp = self.canvas.create_text(self.X_AXIS+150,self.Y_AXIS+20,fill="darkblue",font="Times 12 italic bold",
+                        text="")
+
         #initialize 7 rectangle with empty height
-        self.rec1 = self.canvas.create_rectangle(self.X_AXIS + 0*self.RECT_WIDTH, self.Y_AXIS, self.X_AXIS + 1*self.RECT_WIDTH, self.Y_AXIS, outline='#222', fill='#f76')
-        self.rec2 = self.canvas.create_rectangle(self.X_AXIS + 1*self.RECT_WIDTH, self.Y_AXIS, self.X_AXIS + 2*self.RECT_WIDTH, self.Y_AXIS, outline='#222', fill='#f76')
-        self.rec3 = self.canvas.create_rectangle(self.X_AXIS + 2*self.RECT_WIDTH, self.Y_AXIS, self.X_AXIS + 3*self.RECT_WIDTH, self.Y_AXIS, outline='#222', fill='#f76')
-        self.rec4 = self.canvas.create_rectangle(self.X_AXIS + 3*self.RECT_WIDTH, self.Y_AXIS, self.X_AXIS + 4*self.RECT_WIDTH, self.Y_AXIS, outline='#222', fill='#f76')
-        self.rec5 = self.canvas.create_rectangle(self.X_AXIS + 4*self.RECT_WIDTH, self.Y_AXIS, self.X_AXIS + 5*self.RECT_WIDTH, self.Y_AXIS, outline='#222', fill='#f76')
-        self.rec6 = self.canvas.create_rectangle(self.X_AXIS + 5*self.RECT_WIDTH, self.Y_AXIS, self.X_AXIS + 6*self.RECT_WIDTH, self.Y_AXIS, outline='#222', fill='#f76')
-        self.rec7 = self.canvas.create_rectangle(self.X_AXIS + 6*self.RECT_WIDTH, self.Y_AXIS, self.X_AXIS + 7*self.RECT_WIDTH, self.Y_AXIS, outline='#222', fill='#f76')
+        self.rec1 = self.canvas.create_rectangle(self.X_AXIS + 0*self.RECT_WIDTH, self.Y_AXIS, self.X_AXIS + 1*self.RECT_WIDTH, self.Y_AXIS, outline=self.RECT_OUTLINE_COLOR, fill=self.RECT_COLOR)
+        self.rec2 = self.canvas.create_rectangle(self.X_AXIS + 1*self.RECT_WIDTH, self.Y_AXIS, self.X_AXIS + 2*self.RECT_WIDTH, self.Y_AXIS, outline=self.RECT_OUTLINE_COLOR, fill=self.RECT_COLOR)
+        self.rec3 = self.canvas.create_rectangle(self.X_AXIS + 2*self.RECT_WIDTH, self.Y_AXIS, self.X_AXIS + 3*self.RECT_WIDTH, self.Y_AXIS, outline=self.RECT_OUTLINE_COLOR, fill=self.RECT_COLOR)
+        self.rec4 = self.canvas.create_rectangle(self.X_AXIS + 3*self.RECT_WIDTH, self.Y_AXIS, self.X_AXIS + 4*self.RECT_WIDTH, self.Y_AXIS, outline=self.RECT_OUTLINE_COLOR, fill=self.RECT_COLOR)
+        self.rec5 = self.canvas.create_rectangle(self.X_AXIS + 4*self.RECT_WIDTH, self.Y_AXIS, self.X_AXIS + 5*self.RECT_WIDTH, self.Y_AXIS, outline=self.RECT_OUTLINE_COLOR, fill=self.RECT_COLOR)
+        self.rec6 = self.canvas.create_rectangle(self.X_AXIS + 5*self.RECT_WIDTH, self.Y_AXIS, self.X_AXIS + 6*self.RECT_WIDTH, self.Y_AXIS, outline=self.RECT_OUTLINE_COLOR, fill=self.RECT_COLOR)
+        self.rec7 = self.canvas.create_rectangle(self.X_AXIS + 6*self.RECT_WIDTH, self.Y_AXIS, self.X_AXIS + 7*self.RECT_WIDTH, self.Y_AXIS, outline=self.RECT_OUTLINE_COLOR, fill=self.RECT_COLOR)
 
         self.canvas.pack(fill=BOTH, expand=1)
 
@@ -87,10 +93,15 @@ root.geometry('600x450+300+300')
 
 
 def on_message(client, userdata, message):
- data = message.payload.decode('utf-8')
- obj = json.loads(data)
- util.print_data(obj)
- ex.drawRectangle(ex.canvas,ex.Y_AXIS - (obj['body_temp'] - 30) * 40)
+    data = message.payload.decode('utf-8')
+    try:
+        obj = json.loads(data)
+        util.print_data(obj)
+        ex.drawRectangle(ex.canvas,ex.Y_AXIS - (obj['body_temp'] - 30) * 40)
+        ex.canvas.itemconfigure(ex.time_stamp, text="Last update: "+obj['retrieve_at'])
+    except:
+        ex.drawRectangle(ex.canvas,ex.Y_AXIS)
+    
 
 print("creating new instance")
 client = mqtt.Client() #create new instance
