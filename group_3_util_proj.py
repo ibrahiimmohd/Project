@@ -11,11 +11,19 @@ import group_3_data_generator as data_generator
 
 def create_data():
     data = data_generator.Simulator(37,0.5)
-    user = {
+    json = {
         "body_temp": data.generator_1(),
         "retrieve_at": time.asctime()
     }
-    return user
+    return json
+
+def create_data_wild_data():
+    data = data_generator.Simulator(99,10)
+    json = {
+        "body_temp": data.generator_1(),
+        "retrieve_at": time.asctime()
+    }
+    return json
 
 def print_data(json_obj):
     print('---------------------------------------------------')

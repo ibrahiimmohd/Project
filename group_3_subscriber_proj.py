@@ -1,4 +1,4 @@
-#group_3_subscriber_proj2.py
+#group_3_subscriber_proj.py
 from tkinter import Tk, Canvas, Frame, BOTH, W, TOP, BOTTOM
 import tkinter as tk
 import random
@@ -79,15 +79,27 @@ def on_message(client, userdata, message):
     try:
         obj = json.loads(data)
         util.print_data(obj)
-        # Because Human temp is always greater than 30*C
-        # So will only take the units column
-        # But the units column is small ~ 7
-        # So multiply by 40 to indicate better the different
-        ex.drawRectangle(ex.canvas,ex.Y_AXIS - (obj['body_temp'] - 30) * 40)
-        # Update time stamp label
-        ex.canvas.itemconfigure(ex.time_stamp, text="Last update: "+obj['retrieve_at'])
+        
+        # Good data
+        if (obj['body_temp'] > 34 and obj['body_temp'] < 39):
+            # Because Human temp is always greater than 30*C
+            # So will only take the units column
+            # But the units column is small ~ 7
+            # So multiply by 40 to indicate better the different
+            ex.drawRectangle(ex.canvas,ex.Y_AXIS - (obj['body_temp'] - 30) * 40)
+            # Update time stamp label
+            ex.canvas.itemconfigure(ex.time_stamp, text="Last update: "+obj['retrieve_at'],fill="#FFB6C1")
+        # Wild data
+        else:
+            ex.drawRectangle(ex.canvas,ex.Y_AXIS)
+            # Update time stamp label
+            ex.canvas.itemconfigure(ex.time_stamp, text="Abnormal data received at: "+obj['retrieve_at'],fill="#FFC107")
+        
     except:
+        # Handle broken data
         ex.drawRectangle(ex.canvas,ex.Y_AXIS)
+        # Update time stamp label
+        ex.canvas.itemconfigure(ex.time_stamp, text="Censor Error Receive at: "+obj['retrieve_at'],fill="#DC3545")
     
 
 print("creating new instance")
