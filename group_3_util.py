@@ -3,6 +3,7 @@
 import random
 import time
 import json
+import group_3_data_generator as data_generator
 
 # To Run/Test
 # Open 2 Terminals
@@ -60,6 +61,7 @@ import json
 start_id = 111
 
 def create_data():
+    data = data_generator.Simulator(37,0.5)
     user = {
         "login": "giangkw13",
         "id": start_id,
@@ -71,6 +73,7 @@ def create_data():
         "location": "2 Queen Street",
         "email": "giangkawaii1999@gmail.com",
         "bio": "Sample user for project",
+        "body_temp": data.generator_1(),
         "stats": {
             "public_repos": int(random.gauss(80, 1)),
             "followers": int(random.gauss(20000,350)),
@@ -85,10 +88,12 @@ def create_data():
     return user
 
 def print_data(json_obj):
+    print('---------------------------------------------------')
     print(f'UID#         {json_obj["id"]}')
     print(f'Username:    {json_obj["login"]}')
     print(f'Email:       {json_obj["email"]}')
     print(f'Bio:         {json_obj["bio"]}')
+    print(f'Body Temp:   {json_obj["body_temp"]:.1f}*C')
     print(f'Public repo: {json_obj["stats"]["public_repos"]}')
     print(f'Following:   {json_obj["stats"]["following"]}')
     print(f'Followers:   {json_obj["stats"]["followers"]}')
